@@ -103,9 +103,6 @@ function analyzeSalesData(data, options) {
         // Обновляем счетчик продаж
         seller.sales_count += 1;
 
-        // Добавляем выручку (общая сумма чека минус скидка)
-        seller.revenue += record.total_amount - record.total_discount;
-
         // Обрабатываем каждый товар в чеке
         record.items.forEach(item => {
             const product = productIndex[item.sku];
@@ -121,6 +118,7 @@ function analyzeSalesData(data, options) {
             const itemProfit = itemRevenue - itemCost;
 
             // Обновляем прибыль продавца
+            seller.revenue += itemRevenue;
             seller.profit += itemProfit;
 
             // Обновляем счетчик товаров
