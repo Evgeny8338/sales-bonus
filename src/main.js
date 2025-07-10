@@ -13,8 +13,8 @@ function calculateSimpleRevenue(purchase, _product) {
     // Рассчитываем выручку: цена продажи × количество × множитель скидки
     const revenue = purchase.sale_price * purchase.quantity * discountMultiplier;
 
-    // Возвращаем выручку (прибыль будет рассчитываться позже)
-    return Math.round(revenue * 100) / 100; // Округление до копеек
+    // Возвращаем выручку
+    return revenue;
 }
 
 /**
@@ -94,7 +94,7 @@ function analyzeSalesData(data, options) {
         return acc;
     }, {});
 
-    // 5. Обработка записей о покупках
+    // 5. Обработка записей о покупках с округлением
     data.purchase_records.forEach(record => {
         const seller = sellerIndex[record.seller_id];
 
@@ -112,14 +112,14 @@ function analyzeSalesData(data, options) {
             const itemRevenue = calculateRevenue(item, product);
 
             // Рассчитываем себестоимость
-            const itemCost = product.purchase_price * item.quantity;
+            const itemCost = Math.round(product.purchase_price * item.quantity * 100) / 100;
 
             // Рассчитываем прибыль
-            const itemProfit = itemRevenue - itemCost;
+            const itemProfit = itemRevenue - itemCost
 
             // Обновляем прибыль продавца
-            seller.revenue += itemRevenue;
-            seller.profit += itemProfit;
+            seller.revenue = Math.round((seller.revenue + itemRevenue) * 100) / 100;
+            seller.profit = seller.profit + itemProfit
 
             // Обновляем счетчик товаров
             if (!seller.products_sold[item.sku]) {
