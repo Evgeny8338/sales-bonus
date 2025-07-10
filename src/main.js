@@ -14,7 +14,7 @@ function calculateSimpleRevenue(purchase, _product) {
     const revenue = purchase.sale_price * purchase.quantity * discountMultiplier;
 
     // Возвращаем выручку (прибыль будет рассчитываться позже)
-    return revenue;
+    return Math.round(revenue * 100) / 100; // Округление до копеек
 }
 
 /**
